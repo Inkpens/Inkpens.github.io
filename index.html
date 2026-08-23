@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ink Pens — 3333 pens drawn on Ink</title>
+<meta name="description" content="3333 unique pixel pens, drawn on Ink. The chain is called Ink — somebody had to bring the pens. ~$2 mint on OpenSea.">
+<meta property="og:title" content="Ink Pens">
+<meta property="og:description" content="3333 pens, drawn on Ink. ~$2 on OpenSea.">
+<meta property="og:image" content="pens/1.png">
+<link rel="icon" href="pens/51.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+  /* ---- update after the OpenSea drop page exists ---- */
+  :root{
+    --paper:#f4f1e8; --ink:#26262c; --line:#e3ddcd; --blue:#2d5fd0;
+    --orange:#e8842c; --dark:#1e2030; --darker:#16182a; --cream:#fdfbf4;
+    --ok:#2c9e46;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--paper);color:var(--ink);
+    font-family:"Courier New",ui-monospace,monospace;font-size:17px;line-height:1.6;
+    background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+    background-size:28px 28px;
+  }
+  img{image-rendering:pixelated}
+  .px{font-family:"Press Start 2P",monospace}
+  a{color:inherit}
+
+  /* nav */
+  nav{
+    position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:20px;
+    padding:14px 24px;background:var(--cream);border-bottom:3px solid var(--ink);
+  }
+  nav .logo{font-size:.8rem;letter-spacing:.05em;text-decoration:none}
+  nav .links{margin-left:auto;display:flex;gap:18px;font-size:.95rem}
+  nav .links a{text-decoration:none;opacity:.8}
+  nav .links a:hover{opacity:1;text-decoration:underline}
+  .btn{
+    display:inline-block;padding:12px 22px;border:3px solid var(--ink);cursor:pointer;
+    background:var(--orange);color:#fff;text-decoration:none;font-family:inherit;
+    font-size:1rem;letter-spacing:.04em;box-shadow:4px 4px 0 rgba(38,38,44,.35);
+  }
+  .btn:hover{filter:brightness(1.07)}
+  .btn:active{transform:translate(2px,2px);box-shadow:2px 2px 0 rgba(38,38,44,.35)}
+  .btn.blue{background:var(--blue)}
+  nav .btn{padding:9px 14px;font-size:.85rem}
+
+  /* hero */
+  .hero{text-align:center;padding:72px 20px 40px;max-width:900px;margin:0 auto}
+  .hero h1{font-size:clamp(1.6rem,6vw,3.2rem);line-height:1.35;text-shadow:4px 4px 0 var(--orange)}
+  .hero .tag{margin:26px auto 8px;font-size:1.15rem;max-width:560px}
+  .hero .tag b{background:var(--ink);color:var(--paper);padding:2px 8px}
+  .hero .cta{margin-top:32px;display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+
+  /* marquee */
+  .marquee{overflow:hidden;border-top:3px solid var(--ink);border-bottom:3px solid var(--ink);background:var(--cream);padding:18px 0}
+  .marquee+.marquee{border-top:none}
+  .track{display:flex;gap:16px;width:max-content;animation:scroll 40s linear infinite}
+  .track.rev{animation-direction:reverse}
+  .track img{width:96px;height:96px;border:3px solid var(--ink);background:#fff}
+  @keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  @media (prefers-reduced-motion: reduce){.track{animation:none}}
+
+  /* sections */
+  section{padding:72px 24px;max-width:960px;margin:0 auto}
+  h2{font-size:clamp(1.1rem,3.5vw,1.6rem);margin-bottom:28px}
+  h2::after{content:"";display:block;width:72px;height:6px;background:var(--orange);margin-top:12px}
+  .prose p{max-width:640px;margin-bottom:16px}
+  .prose .aside{border-left:6px solid var(--blue);padding:10px 16px;background:var(--cream);max-width:640px;margin:22px 0}
+
+  /* specs strip */
+  .specs{background:var(--dark);color:var(--paper);border-top:3px solid var(--ink);border-bottom:3px solid var(--ink)}
+  .specs .in{max-width:960px;margin:0 auto;padding:40px 24px;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:28px;text-align:center}
+  .specs b{display:block;font-size:1.15rem;margin-bottom:8px;color:var(--orange)}
+  .specs span{font-size:.9rem;opacity:.85}
+
+  /* type cards */
+  .types{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:20px}
+  .card{background:var(--cream);border:3px solid var(--ink);box-shadow:5px 5px 0 rgba(38,38,44,.25);padding:14px;text-align:center}
+  .card img{width:100%;max-width:160px;border:2px solid var(--ink)}
+  .card b{display:block;margin-top:10px;font-size:.95rem}
+  .card span{font-size:.82rem;opacity:.7}
+  .card.rare{outline:3px dashed var(--orange);outline-offset:-9px}
+
+  /* faq */
+  details{background:var(--cream);border:3px solid var(--ink);margin-bottom:14px;max-width:720px}
+  summary{cursor:pointer;padding:14px 18px;font-weight:bold;list-style:none}
+  summary::before{content:"+ "}
+  details[open] summary::before{content:"− "}
+  details p{padding:0 18px 16px;max-width:640px}
+
+  footer{background:var(--darker);color:var(--paper);padding:40px 24px;text-align:center;font-size:.9rem}
+  footer a{color:var(--paper)}
+  footer .dim{opacity:.55;margin-top:10px}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="px logo" href="#">🖊 INK PENS</a>
+  <div class="links">
+    <a href="#idea">the idea</a>
+    <a href="#pens">the pens</a>
+    <a href="#rarity">rarity</a>
+    <a href="#faq">faq</a>
+  </div>
+  <a class="btn" href="https://opensea.io/collection/ink-pens" target="_blank" rel="noopener">MINT ON OPENSEA</a>
+</nav>
+
+<div class="hero">
+  <h1 class="px">3333 PENS.<br>DRAWN ON INK.</h1>
+  <p class="tag">The chain is called <b>Ink</b>. Somebody had to bring the <b>pens</b>.</p>
+  <div class="cta">
+    <a class="btn" href="https://opensea.io/collection/ink-pens" target="_blank" rel="noopener">MINT ON OPENSEA — ~$2</a>
+    <a class="btn blue" href="#idea">WHAT IS THIS?</a>
+  </div>
+</div>
+
+<div class="marquee"><div class="track" id="row1"></div></div>
+<div class="marquee"><div class="track rev" id="row2"></div></div>
+
+<section id="idea" class="prose">
+  <h2 class="px">THE IDEA</h2>
+  <p>Ink Pens is a pixel-art stationery drawer: ballpoints, gels, markers, fountain pens, brush pens — and the occasional quill — every one drawn pixel by pixel and dropped on paper, blueprints, blackboards and desks.</p>
+  <p>Out of 600,000+ possible trait combinations, exactly <strong>3333</strong> pens exist. No two share the same combination. Once they're minted, the metadata gets frozen on-chain — the drawer never changes.</p>
+  <div class="aside">No roadmap theater. A ~$2 mint on a brand-new chain, art you can actually look at, and a collection that's finished the day it sells out. Grab a pen, sign something.</div>
+  <p>Ink is Kraken's Ethereum L2 — fast, cheap, and young. Ink Pens is the kind of collection young chains are for: cheap enough that everyone's in, small enough that it matters.</p>
+</section>
+
+<div class="specs">
+  <div class="in">
+    <div><b>3333</b><span>unique pens</span></div>
+    <div><b>~$2</b><span>per mint</span></div>
+    <div><b>3</b><span>max per tx</span></div>
+    <div><b>Ink</b><span>Kraken's Ethereum L2</span></div>
+    <div><b>Frozen</b><span>metadata after mint-out</span></div>
+  </div>
+</div>
+
+<section id="pens">
+  <h2 class="px">THE PENS</h2>
+  <div class="types">
+    <div class="card"><img src="pens/1.png" alt="Ballpoint"><b>Ballpoint</b><span>779 of 3333</span></div>
+    <div class="card"><img src="pens/2.png" alt="Gel"><b>Gel</b><span>614 of 3333</span></div>
+    <div class="card"><img src="pens/3.png" alt="Rollerball"><b>Rollerball</b><span>542 of 3333</span></div>
+    <div class="card"><img src="pens/11.png" alt="Marker"><b>Marker</b><span>469 of 3333</span></div>
+    <div class="card"><img src="pens/6.png" alt="Fountain"><b>Fountain</b><span>409 of 3333</span></div>
+    <div class="card"><img src="pens/15.png" alt="Brush Pen"><b>Brush Pen</b><span>322 of 3333</span></div>
+    <div class="card rare"><img src="pens/51.png" alt="Quill"><b>Quill</b><span>198 of 3333 · rare</span></div>
+  </div>
+</section>
+
+<section id="rarity">
+  <h2 class="px">CHASE TRAITS</h2>
+  <div class="types">
+    <div class="card rare"><img src="pens/5.png" alt="Rainbow ink"><b>Rainbow Ink</b><span>104 pens</span></div>
+    <div class="card rare"><img src="pens/37.png" alt="Gold barrel"><b>Gold Barrel</b><span>67 pens</span></div>
+    <div class="card rare"><img src="pens/139.png" alt="Ink Wash background"><b>Ink Wash</b><span>64 pens</span></div>
+    <div class="card rare"><img src="pens/25.png" alt="Silver barrel"><b>Silver Barrel</b><span>~120 pens</span></div>
+  </div>
+  <p style="margin-top:22px;max-width:640px">Plus racing stripes, marble finishes, ink drips, blots, sparkles, chewed caps, gold clips, midnight desks… seven trait layers deep. Full rarity table lives on OpenSea after reveal.</p>
+</section>
+
+<section id="faq">
+  <h2 class="px">FAQ</h2>
+  <details>
+    <summary>How do I mint?</summary>
+    <p>On OpenSea. Connect any EVM wallet, make sure you're on the Ink network (your wallet will prompt you), and mint up to 3 per transaction at ~$2 each.</p>
+  </details>
+  <details>
+    <summary>What's Ink and how do I get ETH there?</summary>
+    <p>Ink is an Ethereum Layer 2 built by Kraken. Gas is paid in ETH and costs fractions of a cent. Easiest path: withdraw ETH from Kraken directly to Ink, or bridge from Ethereum mainnet.</p>
+  </details>
+  <details>
+    <summary>Is the art really done?</summary>
+    <p>Yes — all 3333 pens are rendered before mint. No "art coming soon". After sell-out the metadata is frozen on-chain, permanently.</p>
+  </details>
+  <details>
+    <summary>What are the royalties?</summary>
+    <p>5%, set on-chain via ERC-2981.</p>
+  </details>
+  <details>
+    <summary>What do I get besides a pen?</summary>
+    <p>A pen. A really nice pixel pen on a chain called Ink. That's the whole joke, and it only works 3333 times.</p>
+  </details>
+</section>
+
+<footer>
+  <a href="https://opensea.io/collection/ink-pens" target="_blank" rel="noopener">opensea</a> ·
+  <a href="https://x.com/InkPensOnInk" target="_blank" rel="noopener">x @InkPensOnInk</a> ·
+  <a id="contractLink" href="#" >contract (soon)</a>
+  <div class="dim">3333 pens, drawn on Ink. 🖊</div>
+</footer>
+
+<script>
+  const PENS = [1,2,3,5,6,8,10,11,12,13,14,15,16,19,21,22,25,26,32,33,37,51,52,139];
+  function fill(el, list){
+    const imgs = list.concat(list) // duplicated for seamless loop
+      .map(n => '<img src="pens/'+n+'.png" alt="Ink Pen #'+n+'" loading="lazy">').join('');
+    document.getElementById(el).innerHTML = imgs;
+  }
+  const half = Math.ceil(PENS.length/2);
+  fill('row1', PENS.slice(0,half));
+  fill('row2', PENS.slice(half));
+</script>
+</body>
+</html>
