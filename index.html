@@ -153,6 +153,49 @@
   footer a{color:var(--paper);text-underline-offset:4px}
   footer .dim{opacity:.55;margin-top:12px}
 
+
+  /* ===== animations ===== */
+  body{overflow-x:hidden}
+  /* scroll ink progress */
+  #inkbar{position:fixed;top:0;left:0;height:4px;width:0;background:var(--blue);z-index:20}
+  /* headline letters hop in, pixel steps */
+  .hero h1 .ch{display:inline-block;animation:rise .45s steps(4) backwards;animation-delay:calc(var(--i)*38ms)}
+  @keyframes rise{from{transform:translateY(16px);opacity:0}}
+  /* typewriter tagline */
+  .js .tag .tw{opacity:0}
+  .tag .tw.on{opacity:1}
+  .tag .caret{display:inline-block;width:.55em;height:1.1em;background:var(--ink);vertical-align:text-bottom;margin-left:2px;animation:blink .85s steps(1) infinite}
+  @keyframes blink{50%{opacity:0}}
+  /* self-drawing ink underline */
+  .inkline{height:4px;width:0;background:var(--blue);margin:18px auto 0;animation:draw 1s steps(18) forwards;animation-delay:1.9s}
+  @keyframes draw{to{width:220px}}
+  /* tilted marquee band */
+  .band{transform:rotate(-1.2deg) scale(1.03);margin:14px 0}
+  /* pen wobble on card hover */
+  .card:hover img{animation:wobble .45s steps(2) 2}
+  @keyframes wobble{0%,100%{transform:rotate(0)}25%{transform:rotate(-3deg)}75%{transform:rotate(3deg)}}
+  /* paper sheets land on the desk */
+  .js .rv.sheet{transform:translateY(14px) rotate(-.7deg)}
+  .js .rv.sheet.in{transform:none}
+  /* FAQ content slides in */
+  details[open] p{animation:faqin .22s ease}
+  @keyframes faqin{from{opacity:0;transform:translateY(-4px)}}
+  /* cursor ink trail + click splats */
+  .inkdot{position:fixed;width:6px;height:6px;pointer-events:none;z-index:15;animation:dot .6s steps(3) forwards}
+  @keyframes dot{to{opacity:0;transform:translateY(8px) scale(.4)}}
+  .splat{position:fixed;pointer-events:none;z-index:15}
+  .splat i{position:absolute;width:7px;height:7px;background:var(--blue);animation:sp .55s steps(3) forwards}
+  @keyframes sp{to{opacity:0;transform:translate(var(--dx),var(--dy)) scale(.5)}}
+  .logo:hover{text-decoration:none}
+  .logo:hover .penicon{display:inline-block;animation:wobble .45s steps(2) 2}
+  @media (prefers-reduced-motion: reduce){
+    .hero h1 .ch,.inkline,.card:hover img,details[open] p,.logo:hover .penicon{animation:none}
+    .inkline{width:220px}
+    .tag .caret{display:none}
+    .js .tag .tw{opacity:1}
+    .band{transform:none}
+  }
+
   /* reveal on scroll */
   .js .rv{opacity:0;transform:translateY(12px);transition:opacity .45s ease,transform .45s ease}
   .js .rv.in{opacity:1;transform:none}
@@ -160,9 +203,10 @@
 </style>
 </head>
 <body>
+<div id="inkbar" aria-hidden="true"></div>
 
 <nav>
-  <a class="px logo" href="#">🖊 INK PENS</a>
+  <a class="px logo" href="#"><span class="penicon">🖊</span> INK PENS</a>
   <div class="links">
     <a href="#idea">the idea</a>
     <a href="#pens">the pens</a>
@@ -175,6 +219,7 @@
 <div class="hero">
   <h1 class="px">3333 PENS.<br>DRAWN ON INK.</h1>
   <p class="tag">The chain is called <b>Ink</b>. Somebody had to bring the <b>pens</b>.</p>
+  <div class="inkline" aria-hidden="true"></div>
 
   <div class="launch" id="drop">
     <div class="head"><span class="chip">STEALTH LAUNCH TODAY</span></div>
@@ -194,8 +239,10 @@
   <a class="scrollhint" href="#idea">&darr; what is this?</a>
 </div>
 
-<div class="marquee" aria-hidden="true"><div class="track" id="row1"></div></div>
-<div class="marquee" aria-hidden="true"><div class="track rev" id="row2"></div></div>
+<div class="band" aria-hidden="true">
+<div class="marquee"><div class="track" id="row1"></div></div>
+<div class="marquee"><div class="track rev" id="row2"></div></div>
+</div>
 
 <section id="idea">
   <h2 class="px">THE IDEA</h2>
@@ -282,6 +329,101 @@
   const half = Math.ceil(PENS.length/2);
   fill('row1', PENS.slice(0,half));
   fill('row2', PENS.slice(half));
+
+
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // headline: wrap chars for staggered pixel hop
+  (function(){
+    const h = document.querySelector('.hero h1');
+    let i = 0;
+    [...h.childNodes].forEach(node => {
+      if (node.nodeType !== 3) return;
+      const frag = document.createDocumentFragment();
+      for (const c of node.textContent) {
+        if (c.trim() === '') { frag.appendChild(document.createTextNode(c)); continue; }
+        const sp = document.createElement('span');
+        sp.className = 'ch'; sp.style.setProperty('--i', i++); sp.textContent = c;
+        frag.appendChild(sp);
+      }
+      h.replaceChild(frag, node);
+    });
+  })();
+
+  // tagline typewriter (preserves the bold spans)
+  (function(){
+    const tag = document.querySelector('.tag');
+    const spans = [];
+    (function wrap(el){
+      [...el.childNodes].forEach(node => {
+        if (node.nodeType === 3) {
+          const frag = document.createDocumentFragment();
+          for (const c of node.textContent) {
+            const sp = document.createElement('span');
+            sp.className = 'tw'; sp.textContent = c;
+            frag.appendChild(sp); spans.push(sp);
+          }
+          el.replaceChild(frag, node);
+        } else wrap(node);
+      });
+    })(tag);
+    if (reduced) { spans.forEach(sp => sp.classList.add('on')); return; }
+    const caret = document.createElement('span');
+    caret.className = 'caret'; caret.setAttribute('aria-hidden','true');
+    tag.appendChild(caret);
+    let k = 0;
+    const t = setInterval(() => {
+      if (k >= spans.length) { clearInterval(t); setTimeout(() => caret.remove(), 1600); return; }
+      spans[k++].classList.add('on');
+    }, 26);
+  })();
+
+  // scroll ink progress bar
+  (function(){
+    const bar = document.getElementById('inkbar');
+    let tick = false;
+    addEventListener('scroll', () => {
+      if (tick) return; tick = true;
+      requestAnimationFrame(() => {
+        const max = document.documentElement.scrollHeight - innerHeight;
+        bar.style.width = (max > 0 ? (scrollY / max) * 100 : 0) + '%';
+        tick = false;
+      });
+    }, { passive: true });
+  })();
+
+  // cursor ink trail (fine pointers only)
+  if (!reduced && matchMedia('(pointer: fine)').matches) (function(){
+    const colors = ['#2350c8', '#e8842c', '#7a3fc0'];
+    let lx = -99, ly = -99, n = 0;
+    addEventListener('pointermove', (e) => {
+      if (Math.hypot(e.clientX - lx, e.clientY - ly) < 26) return;
+      lx = e.clientX; ly = e.clientY;
+      const d = document.createElement('div');
+      d.className = 'inkdot';
+      d.style.left = (e.clientX - 3) + 'px'; d.style.top = (e.clientY + 6) + 'px';
+      d.style.background = colors[n++ % colors.length];
+      document.body.appendChild(d);
+      setTimeout(() => d.remove(), 650);
+    }, { passive: true });
+  })();
+
+  // click ink splat (ignores links/buttons)
+  if (!reduced) addEventListener('click', (e) => {
+    if (e.target.closest('a,button,summary,input,textarea,select,details')) return;
+    const w = document.createElement('div');
+    w.className = 'splat';
+    w.style.left = e.clientX + 'px'; w.style.top = e.clientY + 'px';
+    for (let k = 0; k < 6; k++) {
+      const i = document.createElement('i');
+      const a = Math.PI * 2 * k / 6;
+      i.style.setProperty('--dx', Math.round(Math.cos(a) * 16) + 'px');
+      i.style.setProperty('--dy', Math.round(Math.sin(a) * 16) + 'px');
+      w.appendChild(i);
+    }
+    document.body.appendChild(w);
+    setTimeout(() => w.remove(), 620);
+  });
 
   const io = new IntersectionObserver((es) => {
     es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
