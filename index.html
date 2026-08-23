@@ -96,6 +96,14 @@
   details[open] summary::before{content:"− "}
   details p{padding:0 18px 16px;max-width:640px}
 
+  .stealth{
+    display:inline-block;padding:14px 22px;border:3px solid var(--ink);
+    background:var(--orange);color:#fff;font-size:.95rem;letter-spacing:.06em;
+    box-shadow:4px 4px 0 rgba(38,38,44,.35);animation:pulse 1.1s steps(2) infinite;
+  }
+  .stealth.mini{padding:8px 12px;font-size:.72rem;font-family:"Press Start 2P",monospace}
+  @keyframes pulse{50%{background:var(--ink);color:var(--orange)}}
+  @media (prefers-reduced-motion: reduce){.stealth{animation:none}}
   footer{background:var(--darker);color:var(--paper);padding:40px 24px;text-align:center;font-size:.9rem}
   footer a{color:var(--paper)}
   footer .dim{opacity:.55;margin-top:10px}
@@ -111,14 +119,16 @@
     <a href="#rarity">rarity</a>
     <a href="#faq">faq</a>
   </div>
-  <a class="btn" href="https://opensea.io/collection/ink-pens" target="_blank" rel="noopener">MINT ON OPENSEA</a>
+  <span class="stealth mini">STEALTH LAUNCH TODAY</span>
 </nav>
 
 <div class="hero">
   <h1 class="px">3333 PENS.<br>DRAWN ON INK.</h1>
   <p class="tag">The chain is called <b>Ink</b>. Somebody had to bring the <b>pens</b>.</p>
   <div class="cta">
-    <a class="btn" href="https://opensea.io/collection/ink-pens" target="_blank" rel="noopener">MINT ON OPENSEA — ~$2</a>
+    <span class="px stealth">STEALTH LAUNCH TODAY</span>
+  </div>
+  <div class="cta">
     <a class="btn blue" href="#idea">WHAT IS THIS?</a>
   </div>
 </div>
@@ -193,7 +203,6 @@
 </section>
 
 <footer>
-  <a href="https://opensea.io/collection/ink-pens" target="_blank" rel="noopener">opensea</a> ·
   <a href="https://x.com/InkPensOnInk" target="_blank" rel="noopener">x @InkPensOnInk</a> ·
   <a id="contractLink" href="#" >contract (soon)</a>
   <div class="dim">3333 pens, drawn on Ink. 🖊</div>
